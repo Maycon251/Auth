@@ -8,13 +8,13 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 })
 export class RegisterService {
 
-  readonly endpoint = 'http://localhost:5000/user/register';
+  readonly endpoint = '/user/register';
 
   constructor(private _httpClient: HttpClient) {}
 
-  makeRegister(nickname: string, password: string): Observable<UserRegister | null> {
+  makeRegister(user: UserRegister): Observable<UserRegister | null> {
     return this._httpClient
-      .post<UserRegister | null>(`${this.endpoint}`, JSON.stringify({ name: nickname, pswd: password }))
+      .post<UserRegister | null>(`${this.endpoint}`, JSON.stringify(user))
       .pipe(catchError((error: HttpErrorResponse) => {
         return throwError(error);
       }));

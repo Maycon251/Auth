@@ -27,10 +27,10 @@ def make_login():
     
     data = request.get_json(True)
     
-    if (User.find_one({ 'name': data['name'], 'pswd': md5(data['pswd'].encode()).hexdigest() })):
+    if (User.find_one({ 'name': data['nickname'], 'password': md5(data['password'].encode()).hexdigest() })):
         token = str(uuid4())
         try:
-            User.update_one({ 'name': data.get('name') }, { '$set': {' token': token } })
+            User.update_one({ 'name': data['nickname'] }, { '$set': {' token': token } })
         except:
             return abort(500, 'Erro no login, tente novamente mais tarde')
         else:
@@ -42,10 +42,10 @@ def make_register():
     """ Realiza o registro do usuário """
     
     data = request.get_json(True)
-    print(data.get('name'))
-    if not (User.find_one({ 'name': data['name'] })):
+    print(data)
+    if not (User.find_one({ 'name': data['nickname'] })):
         try:
-            User.insert_one({ 'name': data['name'], 'key': 'T4Convido' , 'permitiontype': 'convidado', 'pswd': md5(data['pswd'].encode() ).hexdigest() })
+            User.insert_one({ 'name': data['nickname'], 'key': 'T4Convido' , 'permitiontype': 'convidado', 'password': md5(data['password'].encode() ).hexdigest() })
         except:
             return abort(500, 'Erro no registro, tente novamente mais tarde')
         else:
