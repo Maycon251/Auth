@@ -29,6 +29,27 @@ def logout():
     return user.logout()
 
 
+@app.post('/admin/blockPermission')
+@user.required_admin
+def blockUserPermission():
+    data = request.get_json(True)
+    
+    if not data:
+        return abort(400, 'Dados inválidos')
+    
+    return user.block_permission()
+
+@app.post('/admin/unblockPermission')
+@user.required_admin
+def unblockUserPermission():
+    data = request.get_json(True)
+    
+    if not data:
+        return abort(400, 'Dados inválidos')
+    
+    return user.unblock_permission()
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
