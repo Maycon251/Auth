@@ -7,11 +7,21 @@ export const routes: Routes = [
       import('./pages/register/register.component').then(
         (c) => c.RegisterComponent
       ),
+    title: 'Sistema de automação - Registro',
   },
   {
     path: '',
     loadComponent: () =>
       import('./pages/login/login.component').then((c) => c.LoginComponent),
+    title: 'Sistema de automação - Login',
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./pages/dashboard/dashboard.component').then(
+        (c) => c.DashboardComponent
+      ),
+    title: 'Sistema de automação - Dashboard',
   },
   {
     path: '**',
@@ -19,5 +29,6 @@ export const routes: Routes = [
       import('./pages/not-found/not-found.component').then(
         (c) => c.NotFoundComponent
       ),
+    title: 'Página não encontrada',
   },
 ];
