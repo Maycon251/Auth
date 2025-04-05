@@ -9,7 +9,6 @@ import { Component, inject } from '@angular/core';
   styleUrl: './not-found.component.scss',
 })
 export class NotFoundComponent {
-  // Constants
   title = StringConstants.PAGE_NOT_FOUND_TITLE;
   text = StringConstants.PAGE_NOT_FOUND_TEXT;
   button = StringConstants.PAGE_NOT_FOUND_BUTTON;

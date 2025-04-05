@@ -14,6 +14,7 @@ export class LoginService {
   loginUser(user: UserLogin): Observable<{ token: string }> {
     return this._httpClient.post<{ token: string }>(`${this.endpoint}`, user, {
       headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
     });
   }
 }

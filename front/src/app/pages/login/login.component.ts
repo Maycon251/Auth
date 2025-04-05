@@ -42,9 +42,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     const user = this.registerForm.value;
     const sub = this._loginService.loginUser(user).subscribe(
       (response) => {
-        localStorage.setItem('token', response.token);
-        //TODO cria page Dashboard
-        // this._router.navigate(['/dashboard']);
+        document.cookie = `token=${response.token}; path=/; secure; SameSite=Strict`;
+        this._router.navigate(['/dashboard']);
       },
       (error) => {
         if (error.status === 401) {
