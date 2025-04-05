@@ -11,10 +11,14 @@ export class LoginService {
 
   constructor(private _httpClient: HttpClient) {}
 
-  loginUser(user: UserLogin): Observable<{ token: string }> {
-    return this._httpClient.post<{ token: string }>(`${this.endpoint}`, user, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    });
+  loginUser(user: UserLogin): Observable<{ acess_token: string }> {
+    return this._httpClient.post<{ acess_token: string }>(
+      `${this.endpoint}`,
+      user,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      }
+    );
   }
 }

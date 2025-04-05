@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     const user = this.registerForm.value;
     const sub = this._loginService.loginUser(user).subscribe(
       (response) => {
-        document.cookie = `token=${response.token}; path=/; secure; SameSite=Strict`;
+        document.cookie = `token=${response.acess_token}; path=/; secure; SameSite=Strict`;
         this._router.navigate(['/dashboard']);
       },
       (error) => {
