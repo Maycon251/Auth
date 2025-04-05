@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -49,11 +49,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (error.status === 401) {
           this.errorMessage = 'Usuário ou senha inválidos!';
         } else if (error.status === 500) {
-          this.errorMessage = 'Erro no servidor!';
+          this._router.navigate(['/erro-api'], {
+            queryParams: { status: 500 },
+          });
         } else if (error.status === 403) {
-          //TODO criar page de erro 403
-          // this._router.navigate(['/erro-api']);
+          this._router.navigate(['/erro-api'], {
+            queryParams: { status: 403 },
+          });
+          return throwError(() => new Error('Acesso negado!'));
         }
+        return throwError(() => error);
       }
     );
     this._subs.add(sub);
