@@ -10,13 +10,13 @@ export const routes: Routes = [
     title: 'Sistema de automação - Registro',
   },
   {
-    path: '',
+    path: 'login',
     loadComponent: () =>
       import('./pages/login/login.component').then((c) => c.LoginComponent),
     title: 'Sistema de automação - Login',
   },
   {
-    path: 'dashboard',
+    path: '',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then(
         (c) => c.DashboardComponent

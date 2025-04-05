@@ -19,7 +19,6 @@ def required_login(f):
             return abort(401, 'Login necessário')
         
         user = User.find_one({ 'token': token }, {'permitiontype': 1 })
-        
         if not user:
             return abort(401, 'Token inválido ou expirado')
         elif user['permitiontype'] == 'blocked':
@@ -53,16 +52,20 @@ def make_login():
     if not data.get('nickname') or not data.get('password'):
         return abort(400, 'Dados inválidos')
     
-    if (User.find_one({ 'name': data['nickname'], 'password': md5(data['password'].encode()).hexdigest() })):
+    user = User.find_one({ 'name': data['nickname'], 'password': md5(data['password'].encode()).hexdigest() }, {'permitiontype': 1})
+    if (user):
         token = str(uuid4())
         try:
-            User.update_one({ 'name': data['nickname'] }, { '$set': {' token': token } })
+            User.update_one({ 'name': data['nickname'] }, { '$set': {'token': token } })
         except:
             return abort(500, 'Erro no login, tente novamente mais tarde')
         else:
-            return jsonify({ 'acess_token': token })
+            response = jsonify({ 'status': 'success', 'permisionType': user['permitiontype'] })
+            response.set_cookie('token', token, httponly=True, samesite='Lax', secure=True)
+            response.status_code = 200 if user['permitiontype'] != 'blocked' else 403
+            return response
     else:
-        return abort(404, 'Usuário não encontrado')
+        return abort(404, 'Login e/ou senha inválidos')
         
         
 def make_register():
@@ -75,7 +78,7 @@ def make_register():
     
     if not (User.find_one({ 'name': data['nickname'] })):
         try:
-            User.insert_one({ 'name': data['nickname'], 'key': getenv('GUEST_KEY') , 'permitiontype': 'bloqued', 'password': md5(data['password'].encode() ).hexdigest() })
+            User.insert_one({ 'name': data['nickname'], 'key': getenv('GUEST_KEY') , 'permitiontype': 'blocked', 'password': md5(data['password'].encode() ).hexdigest() })
         except:
             return abort(500, 'Erro no registro, tente novamente mais tarde')
         else:
@@ -126,3 +129,10 @@ def unblock_permission():
         return abort(500, 'Erro ao desbloquear permissão, tente novamente mais tarde')
     else:
         return jsonify({ 'status': 'success' })
+
+def logout():
+    """ Realiza o logout do usuário """
+    
+    response = jsonify({ 'status': 'success' })
+    response.delete_cookie('token', httponly=True, samesite='Lax', secure=True)
+    return response
