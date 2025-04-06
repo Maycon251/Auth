@@ -4,11 +4,41 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () =>
-      import('./pages/register/register.component').then(c => c.RegisterComponent),
+      import('./pages/register/register.component').then(
+        (c) => c.RegisterComponent
+      ),
+    title: 'Sistema de automação - Registro',
+  },
+
+  {
+    path: 'error-api',
+    loadComponent: () =>
+      import('./pages/error-api/error-api.component').then(
+        (c) => c.ErrorApiComponent
+      ),
+    title: 'Sistema de automação - Error',
+  },
+
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./pages/login/login.component').then((c) => c.LoginComponent),
+    title: 'Sistema de automação - Login',
   },
   {
     path: '',
     loadComponent: () =>
-      import('./pages/login/login.component').then(c => c.LoginComponent),
+      import('./pages/dashboard/dashboard.component').then(
+        (c) => c.DashboardComponent
+      ),
+    title: 'Sistema de automação - Dashboard',
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./pages/not-found/not-found.component').then(
+        (c) => c.NotFoundComponent
+      ),
+    title: 'Página não encontrada',
   },
 ];

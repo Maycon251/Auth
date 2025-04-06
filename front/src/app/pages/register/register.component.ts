@@ -42,6 +42,7 @@ export class RegisterComponent implements OnDestroy {
       const sub = this._registerService
       .makeRegister(this.registerForm.value)
       .subscribe((response) => {
+        console.log(response);
         if (response) {
           this._router.navigate(['/']);
         } 

@@ -4,7 +4,7 @@ from assets import user
 @app.get('/')
 @user.required_login
 def getHomePage():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 @app.get('/login')
 def getLogin():
@@ -29,6 +29,29 @@ def logout():
     return user.logout()
 
 
+@app.post('/admin/blockPermission')
+@user.required_admin
+def blockUserPermission():
+    data = request.get_json(True)
+    
+    if not data:
+        return abort(400, 'Dados inválidos')
+    
+    return user.block_permission()
+
+@app.post('/admin/unblockPermission')
+@user.required_admin
+def unblockUserPermission():
+    data = request.get_json(True)
+    
+    if not data:
+        return abort(400, 'Dados inválidos')
+    return user.unblock_permission()
+
+
+@app.errorhandler(Exception)
+def error(e):
+    return app.send_static_file('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
