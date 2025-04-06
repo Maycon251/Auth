@@ -46,7 +46,6 @@ def unblockUserPermission():
     
     if not data:
         return abort(400, 'Dados inválidos')
-    
     return user.unblock_permission()
 
 
