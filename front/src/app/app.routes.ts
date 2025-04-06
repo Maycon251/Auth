@@ -9,6 +9,16 @@ export const routes: Routes = [
       ),
     title: 'Sistema de automação - Registro',
   },
+
+  {
+    path: 'error-api',
+    loadComponent: () =>
+      import('./pages/error-api/error-api.component').then(
+        (c) => c.ErrorApiComponent
+      ),
+    title: 'Sistema de automação - Error',
+  },
+
   {
     path: 'login',
     loadComponent: () =>
