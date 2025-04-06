@@ -49,9 +49,13 @@ def unblockUserPermission():
     return user.unblock_permission()
 
 
+@app.get('/error-api')
+def getErrorAPI():
+    return app.send_static_file('index.html')
+
 @app.errorhandler(Exception)
 def error(e):
-    return app.send_static_file('index.html')
+    return redirect(f'/error-api?status={e.code}')
 
 if __name__ == '__main__':
     app.run(debug=True)

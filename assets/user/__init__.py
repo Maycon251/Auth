@@ -1,5 +1,5 @@
 
-from flask import request, abort, jsonify, url_for, redirect
+from flask import request, abort, jsonify, url_for, redirect, make_response
 from assets.db import db, md5
 from functools import wraps
 from uuid import uuid4
@@ -133,6 +133,6 @@ def unblock_permission():
 def logout():
     """ Realiza o logout do usuário """
     
-    response = jsonify({ 'status': 'success' })
+    response = make_response(redirect(url_for('getLogin')))
     response.delete_cookie('token', httponly=True, samesite='Lax', secure=True)
     return response
