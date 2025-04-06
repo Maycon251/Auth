@@ -26,7 +26,7 @@ export const routes: Routes = [
     title: 'Sistema de automação - Login',
   },
   {
-    path: 'dashboard',
+    path: '',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then(
         (c) => c.DashboardComponent

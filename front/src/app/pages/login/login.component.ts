@@ -44,17 +44,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     const sub = this._loginService.loginUser(user).subscribe(
       (response) => {
         document.cookie = `token=${response.acess_token}; path=/; secure; SameSite=Strict`;
-        this._router.navigate(['/dashboard']);
+        this._router.navigate(['/']);
       },
       (error) => {
         if (error.status === 401) {
           this.errorMessage = 'Usuário ou senha inválidos!';
         } else if (error.status === 500) {
-          this._router.navigate(['/erro-api'], {
+          this._router.navigate(['/error-api'], {
             queryParams: { status: 500 },
           });
         } else if (error.status === 403) {
-          this._router.navigate(['/erro-api'], {
+          this._router.navigate(['/error-api'], {
             queryParams: { status: 403 },
           });
           return throwError(() => new Error('Acesso negado!'));
