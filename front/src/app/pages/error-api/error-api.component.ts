@@ -13,6 +13,8 @@ export class ErrorApiComponent implements OnInit, OnDestroy {
   title = '';
   text = '';
   button = '';
+  statusCode = '';
+
   private _router = inject(ActivatedRoute);
   private _route = inject(Router);
   private _subs = new Subscription();
@@ -28,6 +30,7 @@ export class ErrorApiComponent implements OnInit, OnDestroy {
   private _controllerError() {
     const sub = this._router.queryParams.subscribe((params) => {
       const status = params['status'];
+      this.statusCode = status;
       switch (status) {
         case '403':
           this.title = StringConstants.ERROR_fORBIDDEN_TITLE;
