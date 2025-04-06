@@ -10,10 +10,11 @@ import {
 import { Router } from '@angular/router';
 import { Subscription, throwError } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, HeaderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

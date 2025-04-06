@@ -20,7 +20,7 @@ export const routes: Routes = [
   },
 
   {
-    path: '',
+    path: 'login',
     loadComponent: () =>
       import('./pages/login/login.component').then((c) => c.LoginComponent),
     title: 'Sistema de automação - Login',
