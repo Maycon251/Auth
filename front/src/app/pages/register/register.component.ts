@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { RegisterService } from './service/register.service';
 import { Subscription } from 'rxjs';
 
@@ -37,6 +37,16 @@ export class RegisterComponent implements OnDestroy {
     this._subs.unsubscribe();
   }
 
+  private _goToLogin() {
+    const navigationExtras: NavigationExtras = {
+      state: { message: 'Cadastro realizado com sucesso!' },
+    };
+
+    this._router.navigate(['/login'], navigationExtras);
+  }
+  goBack() {
+    this._router.navigate(['/login']);
+  }
   onSubmit() {
     if (this.registerForm.valid) {
       const sub = this._registerService
@@ -44,7 +54,7 @@ export class RegisterComponent implements OnDestroy {
       .subscribe((response) => {
         console.log(response);
         if (response) {
-          this._router.navigate(['/']);
+          this._goToLogin();
         } 
       }, (error) => {
         if (error.status === 401) {

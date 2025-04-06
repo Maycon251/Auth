@@ -8,6 +8,7 @@ from os import getenv
 
 User = db.get_collection('users')
 
+
 def required_login(f):
     """ Define rota que requer login obrigatório """
     
@@ -26,7 +27,6 @@ def required_login(f):
         return f()
         
     return check_login
-
 
 def required_admin(f):
     """ Define rota que requer permissão de admin """
@@ -61,12 +61,11 @@ def make_login():
             return abort(500, 'Erro no login, tente novamente mais tarde')
         else:
             response = jsonify({ 'status': 'success', 'permisionType': user['permitiontype'] })
-            response.set_cookie('token', token, httponly=True, samesite='Lax', secure=True)
+            response.set_cookie('token', token, samesite='Lax', httponly=True, secure=True)
             response.status_code = 200 if user['permitiontype'] != 'blocked' else 403
             return response
     else:
-        return abort(404, 'Login e/ou senha inválidos')
-        
+        return abort(401, 'Login e/ou senha inválidos')
         
 def make_register():
     """ Realiza o registro do usuário """
@@ -82,57 +81,52 @@ def make_register():
         except:
             return abort(500, 'Erro no registro, tente novamente mais tarde')
         else:
-            return make_login()
+            return jsonify({ 'status': 'success' })
     else:
         return abort(401, 'Usuário já existe')
-   
-
-@required_login
-def getKey():
-    """ Retorna a chave do usuário """
-    
-    token = request.cookies.get('token')
-    
-    try:
-        return User.find_one({ 'token': token }, { 'key': 1 })
-    except:
-        return False
-
-
-def block_permission():
-    """ Bloqueia um usuário """
-    
-    data = request.get_json(True)
-    
-    if not data.get('nickname'):
-        return abort(400, 'Dados inválidos')
-    
-    try:
-        User.update_one({ 'name': data['nickname'] }, { '$set': { 'permitiontype': 'blocked' } })
-    except:
-        return abort(500, 'Erro ao bloquear permissão, tente novamente mais tarde')
-    else:
-        return jsonify({ 'status': 'success' })
-
-
-def unblock_permission():
-    """ Desbloqueia um usuário """
-    
-    data = request.get_json(True)
-    
-    if not data.get('nickname'):
-        return abort(400, 'Dados inválidos')
-    
-    try:
-        User.update_one({ 'name': data['nickname'] }, { '$set': { 'permitiontype': 'guest' } })
-    except:
-        return abort(500, 'Erro ao desbloquear permissão, tente novamente mais tarde')
-    else:
-        return jsonify({ 'status': 'success' })
 
 def logout():
     """ Realiza o logout do usuário """
     
     response = make_response(redirect(url_for('getLogin')))
-    response.delete_cookie('token', httponly=True, samesite='Lax', secure=True)
+    response.delete_cookie('token', samesite='Lax', httponly=True, secure=True)
     return response
+
+
+def list_users(filter):
+    """ Lista os usuários com base no filtro """
+    
+    users = User.find(filter, { '_id': 0, 'name': 1, 'permitiontype': 1 }).limit(50)
+    
+    if not users:
+        return abort(404, 'Nenhum usuário encontrado')
+    
+    return jsonify([ { 'nickname': user['name'], 'permitiontype': user['permitiontype'] } for user in users ])
+
+def block_permission(nickname):
+    """ Bloqueia um usuário """
+    
+    try:
+        User.update_one({ 'name': nickname }, { '$set': { 'permitiontype': 'blocked' } })
+    except:
+        return abort(500, 'Erro ao bloquear usuário')
+    else:
+        return jsonify({ 'status': 'success' })
+
+def unblock_permission(nickname):
+    """ Desbloqueia um usuário """
+    
+    try:
+        User.update_one({ 'name': nickname }, { '$set': { 'permitiontype': 'guest' } })
+    except:
+        return abort(500, 'Erro ao desbloquear usuário')
+    else:
+        return jsonify({ 'status': 'success' })
+
+def delete_user(nickname):
+    try:
+        User.delete_one({ 'name': nickname })
+    except:
+        return abort(500, 'Erro ao deletar usuário, tente novamente mais tarde')
+    else:
+        return jsonify({ 'status': 'success' })

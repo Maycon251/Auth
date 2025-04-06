@@ -1,19 +1,21 @@
 <div class="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+  
   <div class="card w-full max-w-sm sm:max-w-md md:w-96 bg-base-100 shadow-sm">
     <div class="card-body">
       @if (messageError) {
-      <div class="alert alert-error">
-        <span>{{ messageError }}</span>
+        <div class="alert alert-error">
+          <span>{{ messageError }}</span>
       </div>
-      } @if (messageSuccess) {
+    } @if (messageSuccess) {
       <div class="alert alert-success">
         <span>{{ messageSuccess }}</span>
       </div>
-      }
-      <div class="flex justify-between">
-        <h2 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Registre-se</h2>
-      </div>
-      <form [formGroup]="registerForm" class="flex flex-col gap-2" ng>
+    }
+    <div class="flex justify-between flex-col gap-4 sm:gap-0 mb-4">
+      <a class="text-sky-600 link link-hover flex items-center" (click)="goBack()">Voltar</a>
+      <h2 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Registre-se</h2>
+    </div>
+    <form [formGroup]="registerForm" class="flex flex-col gap-2" ng>
         <label class="floating-label">
           <span class="text-sm sm:text-base">Nickname</span>
           <input

@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, throwError } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
@@ -18,17 +18,19 @@ import { CommonModule } from '@angular/common';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  successMessage!: string | null;
   errorMessage: string = '';
   registerForm!: FormGroup;
-  messageSuccess = '';
   messageError = '';
   private _subs = new Subscription();
 
+  private _activatedRoute = inject(ActivatedRoute);
   private _loginService = inject(LoginService);
   private _formBuilder = inject(FormBuilder);
   private _router = inject(Router);
 
   ngOnInit(): void {
+    this.messageSucessRegister();
     this.registerForm = this._formBuilder.group({
       nickname: ['', [Validators.required, Validators.pattern(/^[^\d]*$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -38,6 +40,18 @@ export class LoginComponent implements OnInit, OnDestroy {
     this._subs.unsubscribe();
   }
 
+  messageSucessRegister(): void {
+    const subs = this._activatedRoute.paramMap.subscribe(() => {
+      const state = window.history.state;
+      if (state && state.message) {
+        this.successMessage = state.message;
+      }
+    });
+    this._subs.add(subs);
+  }
+  goToRegister() {
+    this._router.navigate(['/register']); 
+  }
   login() {
     const user = this.registerForm.value;
     const sub = this._loginService.loginUser(user).subscribe(
@@ -47,6 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       },
       (error) => {
         if (error.status === 401) {
+          console.log('401', error);
           this.errorMessage = 'Usuário ou senha inválidos!';
         } else if (error.status === 500) {
           this._router.navigate(['/error-api'], {

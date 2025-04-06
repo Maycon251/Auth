@@ -1,13 +1,13 @@
 <div class="flex justify-center items-center min-h-screen bg-gray-100 px-4">
   <div class="card w-full max-w-sm sm:max-w-md md:w-96 bg-base-100 shadow-sm">
     <div class="card-body">
-      @if (messageError) {
+      @if (errorMessage) {
       <div class="alert alert-error">
-        <span>{{ messageError }}</span>
+        <span>{{ errorMessage }}</span>
       </div>
-      } @if (messageSuccess) {
+      } @if (successMessage) {
       <div class="alert alert-success">
-        <span>{{ messageSuccess }}</span>
+        <span>{{ successMessage }}</span>
       </div>
       }
       <div class="flex justify-between">
@@ -54,7 +54,7 @@
         </div>
         }
       </form>
-      <div class="mt-4 sm:mt-6">
+      <div class="mt-4 sm:mt-6 flex items-center justify-between flex-col gap-4">
         <button
           [disabled]="!registerForm.valid"
           (click)="login()"
@@ -62,6 +62,8 @@
         >
           Entrar
         </button>
+        
+        <a class="link link-hover" (click)="goToRegister()"> Não possui conta? <span class="text-sky-600">Register-se</span></a>
       </div>
     </div>
   </div>
